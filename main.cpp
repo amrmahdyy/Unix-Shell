@@ -41,6 +41,7 @@ int main(){
     while(1){
          string userCommand="";
         // getline is a function that read a line from an input stream
+        cout<<"Shell > ";
         getline(cin,userCommand);
         if(userCommand.compare("exit")==0){
             //    cout<<"exit"<<endl;
@@ -69,7 +70,7 @@ int main(){
         }
         // child process
         if(pid==0){
-            cout<<"Child process"<<endl;
+            // cout<<"Child process"<<endl;
             if(execvp(args[0],args)<0){
                 perror("Error in Execvp");
                 _exit(1);
@@ -78,7 +79,7 @@ int main(){
         else{
             if(waitEnabled)
              wait(0);
-            cout<<"Parent process"<<endl;
+            // cout<<"Parent process"<<endl;
             
         }
 
