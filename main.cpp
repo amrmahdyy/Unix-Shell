@@ -3,6 +3,8 @@
 #include "unistd.h"
 #include "vector"
 #include "sys/wait.h"
+#include "signal.h"
+#include <fstream>
 using namespace std;
 
 /**
@@ -23,8 +25,18 @@ using namespace std;
         }
         else command+=userCommand[i];
     }
+    // remove & from commands vector
+    if(command.compare("&")!=0)
     commands.push_back(command);
      return commands;
+ }
+ void logger(int signal){
+     ofstream fout;
+     fout.open("log.txt");
+     cout<<"Writing in file"<<endl;
+     // writing inside log.txt file
+     fout<<"Child process was terminated"<<endl;
+     fout.close();
  }
 int main(){
         
@@ -32,6 +44,15 @@ int main(){
          string userCommand="";
         // getline is a function that read a line from an input stream
         getline(cin,userCommand);
+        if(userCommand.compare("exit")==0){
+            //    cout<<"exit"<<endl;
+                _exit(1);
+        }
+        bool waitEnabled=true;
+        if(userCommand[userCommand.size()-1]=='&')waitEnabled=false;
+        /* once the child is terminated, the child sends a signal to the parent and executes the
+        second parameter*/
+        signal(SIGCHLD,logger);
         pid_t pid=fork();
         if(pid<0){
             perror("Fork Failed");
@@ -50,20 +71,17 @@ int main(){
         }
         // child process
         if(pid==0){
-            if(commands[0].compare("exit")==0){
-                cout<<"exit"<<endl;
-                _exit(1);
-            }
+            cout<<"Child process"<<endl;
             if(execvp(args[0],args)<0){
                 perror("Error in Execvp");
                 _exit(1);
             }
         }
         else{
-            if(commands[0].compare("exit")==0){
-                cout<<"exit"<<endl;
-                _exit(1);
-            }
+            if(waitEnabled)
+             wait(0);
+            cout<<"Parent process"<<endl;
+            
         }
 
     }
