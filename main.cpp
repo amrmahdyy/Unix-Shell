@@ -6,7 +6,6 @@
 #include "signal.h"
 #include <fstream>
 using namespace std;
-
 /**
  * function that splits the string command into vector of strings.
  *
@@ -32,8 +31,7 @@ using namespace std;
  }
  void logger(int signal){
      ofstream fout;
-     fout.open("log.txt");
-     cout<<"Writing in file"<<endl;
+     fout.open("log.txt",ios_base::app);
      // writing inside log.txt file
      fout<<"Child process was terminated"<<endl;
      fout.close();
