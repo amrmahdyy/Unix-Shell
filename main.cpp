@@ -11,7 +11,7 @@ using namespace std;
  *
  * @param values userCommand that the user entered
  * @return vector of strings
- */ 
+ */
  vector<string> splitCommands(string userCommand){
     string command="";
     vector<string>commands;
@@ -48,7 +48,9 @@ int main(){
                 _exit(1);
         }
         bool waitEnabled=true;
-        if(userCommand[userCommand.size()-1]=='&')waitEnabled=false;
+        if(userCommand[userCommand.size()-1]=='&'){
+            waitEnabled=false;
+        }
         /* once the child is terminated, the child sends a signal to the parent and executes the
         second parameter*/
         signal(SIGCHLD,logger);
@@ -77,10 +79,11 @@ int main(){
             }
         }
         else{
-            if(waitEnabled)
-             wait(0);
+            if(waitEnabled){
+                // cout<<"Wait enabled"<<endl;
+                waitpid(pid,NULL,0);
+            }
             // cout<<"Parent process"<<endl;
-            
         }
 
     }
